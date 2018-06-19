@@ -6,6 +6,13 @@
   include_once '../../config/Database.php';
   include_once '../../models/Post.php';
 
+  $getId = 0;
+  if (isset($_GET['p'])) {
+    $getId = $_GET['p'];
+  } 
+  // else {
+  //     echo "nothing set"; 
+  // }
   // Instantiate DB & connect
   $database = new Database();
   $db = $database->connect();
@@ -14,9 +21,16 @@
   $post = new Post($db);
 
   // Blog post query
-  $result = $post->read();
+  if ($getId) {
+    $result = $post->read_single($getId);
+  } else {
+    $result = $post->read();
+  }
+  
   // Get row count
   $num = $result->rowCount();
+
+  //echo $num;
 
   // Check if any posts
   if($num > 0) {
@@ -42,6 +56,7 @@
 
     // Turn to JSON & output
     echo json_encode($posts_arr);
+
 
   } else {
     // No Posts

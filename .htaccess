@@ -7,7 +7,7 @@ Options -Indexes
 RewriteCond %{SCRIPT_FILENAME} !-d
 RewriteCond %{SCRIPT_FILENAME} !-f
 
-# Allow access to post|post/|post/(number(s)) :
+# Allow access to post|post/ :
 # post
 # post/
 RewriteRule ^post\/?$ api/post/read.php

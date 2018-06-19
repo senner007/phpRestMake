@@ -1,0 +1,14 @@
+Options +FollowSymLinks
+RewriteEngine On
+
+# Disable directory browsing 
+Options -Indexes
+
+RewriteCond %{SCRIPT_FILENAME} !-d
+RewriteCond %{SCRIPT_FILENAME} !-f
+
+# Allow access to post|post/|post/(number(s)) :
+# post
+# post/
+# post/345
+RewriteRule ^post(\/)?(\/\d*)?$ api/post/read.php?p=$1

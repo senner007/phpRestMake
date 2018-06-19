@@ -10,8 +10,12 @@ RewriteCond %{SCRIPT_FILENAME} !-f
 # Allow access to post|post/|post/(number(s)) :
 # post
 # post/
+RewriteRule ^post\/?$ api/post/read.php
+
+# Allow access to post/(number(s)) :
 # post/345
-RewriteRule ^post(\/)?(\/\d*)?$ api/post/read.php?p=$1
+# number is captured as p
+RewriteRule ^post/(\d*)?$ api/post/read.php?p=$1
 
 # Prevent access to db config file
 RewriteRule ^config/.*\.php$ - [F,L,NC]

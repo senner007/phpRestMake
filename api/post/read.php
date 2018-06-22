@@ -6,14 +6,6 @@
   include_once '../../config/Database.php';
   include_once '../../models/Post.php';
 
-  $getId = 0;
-  if (isset($_GET['p'])) {
-    $getId = $_GET['p'];
-  } 
-  // else {
-  //     echo "nothing set"; 
-  // }
-  // Instantiate DB & connect
   $database = new Database();
   $db = $database->connect();
 
@@ -21,42 +13,24 @@
   $post = new Post($db);
 
   // Blog post query
-  if ($getId) {
-    $result = $post->read_single($getId);
-  } else {
-    $result = $post->read();
-  }
-  
+  // Get all posts if get parameter not set
+  $result = isset($_GET['p']) && filter_input(INPUT_GET, 'p', FILTER_VALIDATE_INT) ? $post->read($_GET['p']) : $post->read();
+
   // Get row count
   $num = $result->rowCount();
-
-  //echo $num;
 
   // Check if any posts
   if($num > 0) {
     // Post array
     $posts_arr = array();
-    $posts_arr['data'] = array();
 
     while($row = $result->fetch(PDO::FETCH_ASSOC)) {
-      extract($row);
 
-      $post_item = array(
-        'id' => $id,
-        'title' => $title,
-        'body' => html_entity_decode($body),
-        'author' => $author,
-        'category_id' => $category_id,
-        'category_name' => $category_name
-      );
-
-      // Push to "data"
-      array_push($posts_arr['data'], $post_item);
+      array_push($posts_arr, $row);
     }
 
     // Turn to JSON & output
     echo json_encode($posts_arr);
-
 
   } else {
     // No Posts

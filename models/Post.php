@@ -18,84 +18,48 @@
       $this->conn = $db;
     }
 
-    // Get Posts
-    public function read() {
-      // Create query
+    public function read($getId = null) {
 
-
-      $query = 'SELECT 
-            c.name as category_name,
-            p.id,
-            p.category_id,
-            p.title,
-            p.body,
-            p.author,
-            p.created_at
-          FROM
-            ' . $this->table . ' p
-          LEFT JOIN
-            categories c ON p.category_id = c.id
-          ORDER BY
-            p.created_at DESC';
+    if ($getId == null) { // READ ALL POSTS
       
-      // Prepare statement
-      $stmt = $this->conn->prepare($query);
+      $query = 'SELECT c.name as category_name,
+        p.id,
+        p.category_id,
+        p.title,
+        p.body,
+        p.author,
+        p.created_at
+      FROM
+        ' . $this->table . ' p
+      LEFT JOIN
+        categories c ON p.category_id = c.id
+      ORDER BY
+        p.created_at DESC';
+    }  
+    else { // READ SINGLE POST
 
-      // Execute query
-      $stmt->execute();
-
-      return $stmt;
-    }
-
-    // Get Single Post
-    public function read_single($getId) {
-
-      //  $p = basename(strtolower("$_SERVER[REQUEST_URI]"));
-      //  echo $p;
-       // Create query
-      // echo $getId;
-
-       $query = 'SELECT 
-       c.name as category_name,
-       p.id,
-       p.category_id,
-       p.title,
-       p.body,
-       p.author,
-       p.created_at
+      $query = 'SELECT c.name as category_name,
+        p.id,
+        p.category_id,
+        p.title,
+        p.body,
+        p.author,
+        p.created_at
       FROM
         ' . $this->table . ' p
       LEFT JOIN
         categories c ON p.category_id = c.id
       WHERE
         p.id = ' . $getId;
+    }
 
       // Prepare statement
       $stmt = $this->conn->prepare($query);
 
-      // Bind ID
-     // $stmt->bindParam(1, $this->id);
-
-      
       // Execute query
       $stmt->execute();
 
       return $stmt;
-      
-      $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-      //echo $row;
-    
-
-      // Set properties
-      $this->title = $row['title'];
-      $this->body = $row['body'];
-      $this->author = $row['author'];
-      $this->category_id = $row['category_id'];
-      $this->category_name = $row['category_name'];
-
-     // echo $row;
-
 
     }
 

@@ -10,6 +10,9 @@
      return;
    }
 
+   // create password table
+   // hash and salt passwords
+
     if(isset($_POST['mypass']) && isset($_POST['myname'])) {
 
 

@@ -15,7 +15,7 @@ RewriteRule ^post\/?$ api/post/read.php
 # Allow access to login|login/ :
 # login
 # login/
-RewriteRule ^login\/?$ config/login.php
+# RewriteRule ^login\/?$ config/login.php
 
 # Allow access to post/(number(s)) :
 # post/345

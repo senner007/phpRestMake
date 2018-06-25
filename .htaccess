@@ -19,6 +19,11 @@ Options -Indexes
 # RewriteCond %{REQUEST_FILENAME} !-d
 # RewriteCond %{REQUEST_FILENAME} !-f
 
+# Allow access to login|login/ :
+# login
+# login/
+ RewriteRule ^login\/?$ config/login.php
+
 # Allow access to post|post/ :
 # post
 # post/
@@ -27,9 +32,15 @@ RewriteRule ^post\/?$ api/post/read.php [L]
 # Allow access to post/(number(s)) :
 # post/345
 # number is captured as p
-RewriteRule ^post/(\d*)?$ api/post/read.php?p=$1
+RewriteRule ^post/(\d*)?$ api/post/read.php?p=$1 [L]
 
 # Prevent direct access to all php files
 RewriteCond %{THE_REQUEST} .*.php[?/\s] [NC]
 RewriteRule ^ - [F]
+
+
+<IfModule mod_headers.c>
+    SetEnvIf Origin "^http(s)?://(.+\.)?(nielshtg|codetoshow|localhost:3000)(\.com|\.dk)?$" AccessControlAllowOrigin=$0
+    Header set Access-Control-Allow-Origin %{AccessControlAllowOrigin}e env=AccessControlAllowOrigin
+</IfModule>
 

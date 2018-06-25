@@ -40,7 +40,7 @@ RewriteRule ^ - [F]
 
 
 <IfModule mod_headers.c>
-    SetEnvIf Origin "^http(s)?://(.+\.)?(nielshtg|codetoshow|localhost:3000)(\.com|\.dk)?$" AccessControlAllowOrigin=$0
+    SetEnvIf Origin "^http(s)?://(.+\.)?(localhost:3000|localhost:1234)(\.com|\.dk)?$" AccessControlAllowOrigin=$0
     Header set Access-Control-Allow-Origin %{AccessControlAllowOrigin}e env=AccessControlAllowOrigin
 </IfModule>
 

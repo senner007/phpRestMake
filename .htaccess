@@ -4,28 +4,32 @@ RewriteEngine On
 # Disable directory browsing 
 Options -Indexes
 
-RewriteCond %{SCRIPT_FILENAME} !-d
-RewriteCond %{SCRIPT_FILENAME} !-f
+#The next two lines are very, very important 
+#it restricts rewriting URLs only to paths that do not actually exists. 
+#This prevents the rules below from matching 
+#example.com/images/logo.png for example. 
+#The first prevents existing directories with the !-d flag 
+#and the second with !-f means ignore existing files.
+
+#The variables SCRIPT_FILENAME and REQUEST_FILENAME contain the same value - 
+#the value of the filename field of the internal request_rec structure of the Apache server. 
+#The first name is the commonly known CGI variable name 
+#while the second is the appropriate counterpart of REQUEST_URI (which contains the value of the uri field of request_rec).
+
+# RewriteCond %{REQUEST_FILENAME} !-d
+# RewriteCond %{REQUEST_FILENAME} !-f
 
 # Allow access to post|post/ :
 # post
 # post/
-RewriteRule ^post\/?$ api/post/read.php
-
-# Allow access to login|login/ :
-# login
-# login/
-# RewriteRule ^login\/?$ config/login.php
+RewriteRule ^post\/?$ api/post/read.php [L]
 
 # Allow access to post/(number(s)) :
 # post/345
 # number is captured as p
 RewriteRule ^post/(\d*)?$ api/post/read.php?p=$1
 
-# Prevent direct access to config/(login.php|Database.php) files
-RewriteCond %{THE_REQUEST} /config/.*.php[?/\s] [NC]
+# Prevent direct access to all php files
+RewriteCond %{THE_REQUEST} .*.php[?/\s] [NC]
 RewriteRule ^ - [F]
 
-# Prevent direct access to ap/post/read.php file
-RewriteCond %{THE_REQUEST} /api/post/read.php[?/\s] [NC]
-RewriteRule ^ - [F]
